@@ -1,0 +1,57 @@
+     <!--
+            <div class="CardProdutosHome">
+                <div class="Top">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS00IXiDyhDca7zG5M-eZPqtPQXReekw-VcMA&s" alt="">
+                    <p>Isso isso</p>
+                </div>
+
+                <div class="Bottom">
+                    <p>R$ 100</p>
+                    <button>Ver mais</button>
+                </div>
+            </div> 
+            -->
+            <!-- Mais cards -->
+
+            
+<div id="produtos-lista" class="CardProdutosHome" >
+ <img src="/imagens_div/produtos/${produto.id_produto}.webp" alt="Imagem do Produto ${produto.nome}">
+
+            <p>${produto.nome}</p>
+          </div>
+          <div class="Bottom">
+            <p>R$ ${produto.preco}</p>
+            <button>Ver mais</button>
+          </div>
+          </div> 
+
+</div>
+         
+        `;
+
+        <script>
+          document.addEventListener("DOMContentLoaded", () => {
+  fetch('/produtos')  // Rota que traz os dados
+    .then(response => response.json())
+    .then(produtos => {
+      const produtosLista = document.getElementById('produtos-lista');
+      produtos.forEach(produto => {
+        const produtoDiv = document.createElement('div');
+        produtoDiv.classList.add('CardProdutosHome');
+
+        produtoDiv.innerHTML = `
+          <img src="/imagens_div/produtos/${produto.id_produto}.webp" alt="Imagem do Produto ${produto.nome}">
+          <p>${produto.nome}</p>
+          <div class="Bottom">
+            <p>R$ ${produto.preco}</p>
+            <button>Ver mais</button>
+          </div>
+        `;
+
+        produtosLista.appendChild(produtoDiv);
+      });
+    })
+    .catch(error => console.error('Erro ao carregar os produtos:', error));
+});
+
+        </script>

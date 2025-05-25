@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/Home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>ML decorações - Home</title>
+   
+</head>
+
+<body>
+
+
+    <!-- FLoats -->
+    <nav class="MenuFloat" id="MenuFloat">
+        <button data-categoria="todos">todos</button>
+        <button data-categoria="infantil">Decoração infantil</button>
+        <button data-categoria="adulto">Decoração adulto</button>
+        <button data-categoria="casamento">Decoração de casamento</button>
+    </nav>
+    <!-- Fim floats -->
+    
+    <header>
+        <div class="Top">
+            <img id="InsertPerfilHome" src="https://conteudo.imguol.com.br/c/noticias/69/2022/04/25/como-saber-se-um-perfil-e-fake-no-instagram-facebook-whatsapp-e-tiktok-1650912044927_v2_4x3.jpg" alt="">
+    
+            <div class="CardSearchHome">
+                <input type="text" id="InputSearchHome" placeholder="Pesquisar">
+                <i id="LupaSearchHome" class="fa-solid fa-magnifying-glass"></i>
+            </div>
+    
+            <div class="InfoUseHome">
+                <i class="fa-solid fa-user"></i>
+                <a href="#">Login ou cadastre-se</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section nav -->
+    <section class="SectionNav">
+        <div class="Left">
+            <button id="BtnToggleCategorias">
+                <span id="SpanCategoriasUm"></span>
+                <span id="SpanCategoriasDois"></span>
+                <span id="SpanCategoriasTrez"></span>
+                 
+            </button>
+            <p id="BtnToggleCategorias" style="cursor: pointer;">Todas as categorias</p>
+            <!-- <i class="fa-solid fa-angle-up"></i> -->
+            <i id="BtnToggleCategorias" class="fa-solid fa-caret-down" style="cursor: pointer; transition: .4s ease-in-out;"></i>
+
+            <div id="InfoUseHome" class="InfoUseHome">
+                <i class="fa-solid fa-user"></i>
+                <a href="#">Login ou cadastre-se</a>
+            </div>
+        </div>
+
+        <div class="Rigth">
+            <button>
+                <i class="fa-solid fa-comment"></i>
+                Fale conosco
+            </button>
+
+            <button>
+                <i class="fa-solid fa-cart-shopping"></i>
+                Carrinho
+            </button>
+        </div>
+    </section>
+    
+    <section class="ProdutosHome" id="ProdutosHome">
+        <div class="BannerProdutos">
+            <img src="https://s2-casaejardim.glbimg.com/yq5x5xPqNK7-IGNB1e2YBuqlIcI=/0x0:1280x851/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_a0b7e59562ef42049f4e191fe476fe7d/internal_photos/bs/2023/3/q/GC6ZlkSmqDTcC6ABTilw/petunia-g7bb06cba6-1280.jpg" alt="">
+        </div>
+
+       <nav class="NavCategorias">
+  <button data-categoria="todos">Todas</button>
+  <button data-categoria="infantil">Infantil</button>
+  <button data-categoria="adulto">Adulto</button>
+  <button data-categoria="casamento">Casamento</button>
+</nav>
+
+
+        <div class="InsertProdutosHome" id="InsertProdutosHome">
+
+     
+<!-- Infantil -->
+<div class="CardProdutosHome"  data-nome="festa safari" data-categoria="infantil" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/festa_safari.webp" alt="Festa Safari">
+    <p>Festa Safari</p>
+  </div>
+  <div class="Bottom">
+   <p>Decoração temática com animais da selva.</p>
+    <p>R$ 180,00</p>
+    <button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+  </div>
+</div>
+
+<div class="CardProdutosHome" data-nome="festa princesas" data-categoria="infantil" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/festa_princesa.webp" alt="Festa Princesas">
+    <p>Festa Princesas</p>
+  </div>
+  <div class="Bottom">
+    <p>Decoração mágica com castelo e princesas.</p>
+    <p>R$ 200,00</p>
+    <button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+  </div>
+</div>
+
+<!-- Adulto -->
+<div class="CardProdutosHome"  data-nome="festa boteco"  data-categoria="adulto" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/festa_boteco.webp" alt="Festa Boteco">
+    <p>Festa Boteco</p>
+  </div>
+  <div class="Bottom">
+    <p>Decoração descontraída com tema de boteco.</p>
+    <p>R$ 250,00</p>
+    <button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+  </div>
+</div>
+
+<div class="CardProdutosHome" data-nome="festa anos 80" data-categoria="adulto" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/festa_anos80.webp" alt="Festa Anos 80">
+    <p>Festa Anos 80</p>
+  </div>
+  <div class="Bottom">
+    <p>Decoração retrô com luzes neon e vinis.</p>
+    <p>R$ 270,00</p>
+    <button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+  </div>
+</div>
+
+<!-- Casamento -->
+<div class="CardProdutosHome" data-nome="casamento rustico" data-categoria="casamento" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/casamento_rustico.webp" alt="Casamento Rústico">
+    <p>Casamento Rústico</p>
+  </div>
+  <div class="Bottom">
+    <p>Decoração com madeira, flores do campo e luzes.</p>
+    <p>R$ 450,00</p>
+    <button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+  </div>
+</div>
+
+<div class="CardProdutosHome" data-nome="casamento classico" data-categoria="adulto" data-id="1">
+  <div class="Top">
+    <img src="../imagens_div/produtos/casamento_classico.webp" alt="Casamento Clássico">
+    <p>Casamento Clássico</p>
+  </div>
+  <div class="Bottom">
+    <p>Decoração elegante com flores brancas e dourado.</p>
+    <p>R$ 500,00</p>
+<button onclick="window.location.href='../views/produtos.html'">Ver mais</button>
+
+
+
+
+            
+    
+    </section>
+
+    <footer>
+        <section class="SectionTop">
+            <div class="Info">
+                <p>
+                    Transformamos sonhos em realidade com excelência e dedicação.
+                </p>
+
+                <a>
+                    <i id="IpContatinos" class="fa-solid fa-envelope"></i>    
+                    Contate-nos
+                </a>
+            </div>
+
+            <iframe id="FrameFooter" src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d31108.785194026943!2d-38.5155072!3d-12.9335296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m1!3e6!5e0!3m2!1spt-BR!2sbr!4v1739965959974!5m2!1spt-BR!2sbr" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </section>
+
+        <section class="SectionBottom">
+            <h4 id="H4FooterCreditos"></h4>
+        </section>
+    </footer>
+
+    <script>
+ 
+    </script>
+
+    <script type="module" src="../script/Home.js"></script>
+   <!--<script type="module" src="../script/Produtos.js"></script>--> 
+</body>
+</html>
