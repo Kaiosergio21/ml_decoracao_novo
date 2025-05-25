@@ -13,6 +13,24 @@ CREATE TABLE usuario (
     data_cadastro DATE
 );
 
+CREATE TABLE usuario (
+  `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `senha` varchar(255) DEFAULT NULL,
+  `cpf_cnpj` varchar(20) DEFAULT NULL,
+  `telefone` varchar(20) DEFAULT NULL,
+  `cep` varchar(10) DEFAULT NULL,
+  `rua` varchar(100) DEFAULT NULL,
+  `numero_da_casa` varchar(10) DEFAULT NULL,
+  `bairro` varchar(50) DEFAULT NULL,
+  `cidade` varchar(50) DEFAULT NULL,
+  `data_cadastro` date DEFAULT NULL,
+  `estado` varchar(50) NOT NULL,
+  `sobrenome` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
 CREATE TABLE produto (
     id_produto INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255),
