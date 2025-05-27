@@ -1,311 +1,216 @@
-const express = require('express');
-const mysql = require('mysql2');
-const path = require('path');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
-
-const app = express();
-
-const port = process.env.PORT || 8000;
-
-// Conexão com MySQL usando Promises
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-}).promise();
-
-// Testa conexão
-console.log('Conexão com o banco de dados MySQL configurada.');
-
-db.query('SELECT 1')
-  .then(() => console.log('Banco conectado com sucesso!'))
-  .catch(err => console.error('Erro na conexão com banco:', err));
+const menu = document.getElementById("dropdown-menu");
+const botaoMenu = document.getElementById("button-all");
 
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Serve arquivos estáticos (HTML, CSS, JS)
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/imagens_div', express.static(path.join(__dirname, 'public/imagens_div')));
-
-// Rota principal exibindo produtos
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'views', 'Home.html'));
+botaoMenu.addEventListener("click", () => {
+    menu.classList.toggle("ativo");
+    menu.classList.toggle("menucult");
 });
 
-//cadastro
+//carrousel
+    const images = document.querySelectorAll('.carousel-img');
+    const prev = document.querySelector('.prev');
+    const next = document.querySelector('.next');
+    let current = 0;
 
-  app.post('/login', (req, res) => {
-  const { email, senha } = req.body;
-
-  db.query('SELECT * FROM usuario WHERE email = ?', [email], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Erro interno no servidor' });
+    function showImage(index) {
+        images.forEach((img, i) => {
+            img.classList.remove('active');
+            if (i === index) img.classList.add('active');
+        });
     }
 
-    if (result.length === 0) {
-      return res.status(400).json({ message: 'Usuário não encontrado' });
-    }
+    prev.addEventListener('click', () => {
+        current = (current === 0) ? images.length - 1 : current - 1;
+        showImage(current);
+    });
 
-    bcrypt.compare(senha, result[0].senha, (err, isMatch) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Erro ao verificar a senha' });
+    next.addEventListener('click', () => {
+        current = (current === images.length - 1) ? 0 : current + 1;
+        showImage(current);
+    });
+
+    // Mostrar a primeira imagem
+    showImage(current);
+
+
+let estrelasSelecionadas = 0;
+
+function atualizarVisualEstrelas() {
+  const estrelas = document.querySelectorAll('#estrelas span');
+  estrelas.forEach(star => {
+    const valor = parseInt(star.getAttribute('data-valor'));
+    star.textContent = valor <= estrelasSelecionadas ? '★' : '☆';
+    star.style.color = valor <= estrelasSelecionadas ? 'gold' : '#999';
+  });
+}
+
+
+
+function configurarEstrelas() {
+  const estrelas = document.querySelectorAll('#estrelas span');
+  estrelas.forEach(star => {
+    star.addEventListener('click', () => {
+      estrelasSelecionadas = parseInt(star.getAttribute('data-valor'));
+      atualizarVisualEstrelas();
+    });
+
+    // Opcional: destacar estrelas no hover
+    star.addEventListener('mouseenter', () => {
+      const valor = parseInt(star.getAttribute('data-valor'));
+      preencherEstrelasHover(valor);
+    });
+
+    star.addEventListener('mouseleave', () => {
+      atualizarVisualEstrelas();
+    });
+  });
+}
+
+function preencherEstrelasHover(valor) {
+  const estrelas = document.querySelectorAll('#estrelas span');
+  estrelas.forEach(star => {
+    const starValor = parseInt(star.getAttribute('data-valor'));
+    star.textContent = starValor <= valor ? '★' : '☆';
+    star.style.color = starValor <= valor ? 'gold' : '#999';
+  });
+}
+
+function enviarAvaliacao() {
+  const comentario = document.getElementById('comentario').value.trim();
+  const produtoId = document.getElementById('produto-id').value;
+  const usuarioId = 1; // Substitua pelo id real do usuário logado
+
+  if (estrelasSelecionadas === 0) {
+    alert('Por favor, selecione uma quantidade de estrelas.');
+    return;
+  }
+
+  if (!comentario) {
+    alert('Digite um comentário antes de enviar.');
+    return;
+  }
+  
+
+  fetch('/avaliacoes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      estrelas: estrelasSelecionadas,
+      comentario,
+      produtoId,
+      usuarioId
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message || 'Avaliação enviada!');
+    document.getElementById('comentario').value = '';
+    estrelasSelecionadas = 0;
+    atualizarVisualEstrelas();
+    carregarAvaliacoes(produtoId);
+  })
+  .catch(err => {
+    console.error('Erro:', err);
+    alert('Erro ao enviar avaliação. Tente novamente.');
+  });
+
+  console.log({
+  estrelas: estrelasSelecionadas,
+  comentario,
+  produtoId,
+  usuarioId
+});
+
+}
+
+function carregarAvaliacoes(produtoId) {
+  fetch(`/avaliacoes/${produtoId}`)
+    .then(res => res.json())
+    .then(avaliacoes => {
+      const lista = document.getElementById('lista-avaliacoes');
+      lista.innerHTML = '';
+      if(avaliacoes.length === 0) {
+        lista.innerHTML = '<p>Nenhuma avaliação ainda.</p>';
+        return;
       }
+   avaliacoes.forEach(a => {
+  const div = document.createElement('div');
+  div.innerHTML = `
+    <p><strong>${'★'.repeat(a.estrelas)}${'☆'.repeat(5 - a.estrelas)}</strong></p>
+    <p><strong>${a.nome_usuario}</strong></p>
+    <p>${a.comentario}</p>
+    
 
-      if (!isMatch) {
-        return res.status(400).json({ message: 'Senha incorreta' });
-      }
+    <hr>
+  `;
+        div.appendChild(document.createElement('hr'));
 
-      // Simples resposta sem token
-      return res.json({
-        message: 'Login bem-sucedido',
-        usuario: {
-          id: result[0].id_usuario,
-          nome: result[0].nome,
-          email: result[0].email
-        }
+        lista.appendChild(div);
+});
+
+    })
+    .catch(err => {
+      console.error('Erro ao carregar avaliações:', err);
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  configurarEstrelas();
+  atualizarVisualEstrelas();
+
+  const produtoId = document.getElementById('produto-id').value;
+  carregarAvaliacoes(produtoId);
+});
+
+
+
+
+//favoritos
+const btnFavorito = document.getElementById('btn-favorito');
+  const produtoId = document.getElementById('produto-id').value; // ou outro jeito de pegar o id
+  const usuarioId = 1; // exemplo, pegue dinamicamente do login
+
+  btnFavorito.addEventListener('click', async () => {
+    try {
+      const response = await fetch('/favoritos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ produtoId, usuarioId }),
       });
-    });
-  });
-});
+      const data = await response.json();
 
-
-  // Rota de Cadastro
-  // Rota de Cadastro
-app.post('/cadastro', (req, res) => {
-  const {
-    nome,
-    sobrenome,
-    email,
-    senha,
-    cpf_cnpj,
-    telefone,
-    cep,
-    estado,
-    cidade,
-    bairro,
-    rua,
-    numero_da_casa
-  } = req.body;
-
-  if (!nome || !sobrenome || !email || !senha || !estado) {
-    return res.status(400).json({ message: 'Campos obrigatórios estão faltando.' });
-  }
-
-  const cpfLimpo = cpf_cnpj ? cpf_cnpj.replace(/\D/g, '') : null;
-  const telefoneLimpo = telefone ? telefone.replace(/\D/g, '') : null;
-  const cepLimpo = cep ? cep.replace(/\D/g, '') : null;
-
-  db.query('SELECT * FROM usuario WHERE email = ?', [email], (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Erro interno no servidor' });
-    }
-
-    if (result.length > 0) {
-      return res.status(400).json({ message: 'Email já cadastrado' });
-    }
-
-    bcrypt.hash(senha, 10, (err, hashedPassword) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Erro ao criptografar a senha' });
-      }
-
-      const dataCadastro = new Date().toISOString().slice(0, 10); // Só a data YYYY-MM-DD
-
-      const query = `
-        INSERT INTO usuario (
-          nome, sobrenome, email, senha, cpf_cnpj, telefone,
-          cep, rua, numero_da_casa, bairro, cidade, data_cadastro, estado
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-
-      db.query(
-        query,
-        [
-          nome,
-          sobrenome,
-          email,
-          hashedPassword,
-          cpfLimpo,
-          telefoneLimpo,
-          cepLimpo,
-          rua,
-          numero_da_casa,
-          bairro,
-          cidade,
-          dataCadastro,
-          estado
-        ],
-        (err, result) => {
-          if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Erro ao cadastrar usuário' });
-          }
-          return res.json({ message: 'Cadastro bem-sucedido' });
+      if (data.sucesso) {
+        if (data.favorito) {
+          btnFavorito.classList.add('favorito');
+          btnFavorito.textContent = '♥'; // cheio e vermelho
+        } else {
+          btnFavorito.classList.remove('favorito');
+          btnFavorito.textContent = '♡'; // vazio e cinza
         }
-      );
-    });
-  });
-});
-
-  // Rota para Troca de Senha
- app.post('/troca-de-senha', (req, res) => {
-  const { cpf_cnpj, senha_nova } = req.body;
-  const cpfLimpo = cpf_cnpj.replace(/\D/g, '');
-
-  // Criptografa a nova senha
-  bcrypt.hash(senha_nova, 10, (err, hashedPassword) => {
-    if (err) {
+      } else {
+        alert('Erro ao favoritar: ' + data.mensagem);
+      }
+    } catch (err) {
       console.error(err);
-      return res.status(500).json({ message: 'Erro ao criptografar a senha' });
+      alert('Erro na comunicação com o servidor.');
     }
-
-    // Atualiza a senha no banco de dados
-    db.query('UPDATE usuario SET senha = ? WHERE cpf_cnpj = ?', [hashedPassword, cpfLimpo], (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ message: 'Erro ao atualizar a senha' });
-      }
-
-      if (result.affectedRows === 0) {
-        return res.status(400).json({ message: 'CPF/CNPJ não encontrado' });
-      }
-
-      return res.json({ message: 'Senha alterada com sucesso' });
-    });
-  });
-});
-
-  // Rota para as páginas estáticas
-  app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname,'public', 'views', 'login.html'));
-  });
-
-  app.get('/cadastro', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public','views', 'cadastro.html'));
-  });
-
-  app.get('/troca-de-senha', (req, res) => {
-    res.sendFile(path.join(__dirname,'public', 'views', 'troca_senha.html'));
   });
 
 
-// Rota para buscar todos os produtos
-app.get('/produtos', async (req, res) => {
-  try {
-    const [results] = await db.query('SELECT * FROM produto');
-    res.json(results);
-  } catch (err) {
-    console.error('Erro ao buscar produtos:', err.message);
-    res.status(500).json({ error: 'Erro ao buscar produtos' });
-  }
-});
+document.getElementById('btn-reservar').addEventListener('click', async () => {
+  const resposta = await fetch('/verificar-login');
+  const dados = await resposta.json();
 
-// Rota para buscar produtos por categoria
-app.get('/produtos/categoria/:categoria', async (req, res) => {
-  const categoria = req.params.categoria;
-  let sql = 'SELECT * FROM produto';
-  const values = [];
-
-  if (categoria !== 'todos') {
-    sql += ' WHERE categoria = ?';
-    values.push(categoria);
-  }
-
-  try {
-    const [results] = await db.query(sql, values);
-    res.json(results);
-  } catch (err) {
-    console.error('Erro ao buscar produtos por categoria:', err.message);
-    res.status(500).json({ error: 'Erro ao buscar produtos por categoria' });
-  }
-});
-
-// Rota para inserir avaliação
-app.post('/avaliacoes', async (req, res) => {
-  const { estrelas, comentario, produtoId, usuarioId } = req.body;
-
-  if (!estrelas || !comentario || !produtoId || !usuarioId) {
-    return res.status(400).json({ error: 'Dados incompletos.' });
-  }
-
-  const sql = `
-    INSERT INTO avaliacao (estrelas, comentario, fk_produto_id_produto, fk_usuario_id_usuario, data_avaliacao)
-    VALUES (?, ?, ?, ?, NOW())
-  `;
-
-  try {
-    await db.query(sql, [estrelas, comentario, produtoId, usuarioId]);
-    res.json({ message: 'Avaliação salva com sucesso!' });
-  } catch (err) {
-    console.error('Erro ao salvar avaliação:', err.message);
-    res.status(500).json({ error: 'Erro ao salvar avaliação.' });
-  }
-});
-
-// Rota para buscar avaliações de um produto
-app.get('/avaliacoes/:produtoId', async (req, res) => {
-  const produtoId = req.params.produtoId;
-
-  const sql = `
-    SELECT estrelas, comentario 
-    FROM avaliacao 
-    WHERE fk_produto_id_produto = ? 
-    ORDER BY data_avaliacao DESC
-  `;
-
-  try {
-    const [results] = await db.query(sql, [produtoId]);
-    res.json(results);
-  } catch (err) {
-    console.error('Erro ao buscar avaliações:', err.message);
-    res.status(500).json({ error: 'Erro ao buscar avaliações' });
-  }
-});
-
-
-// Rota de favoritos (já estava com async/await)
-app.post('/favoritos', async (req, res) => {
-  const { produtoId, usuarioId } = req.body;
-
-  if (!produtoId || !usuarioId) {
-    return res.json({ sucesso: false, mensagem: 'Dados incompletos' });
-  }
-
-  try {
-    const [rows] = await db.query(
-      'SELECT * FROM favoritado WHERE fk_produto_id_produto = ? AND fk_usuario_id_usuario = ?',
-      [produtoId, usuarioId]
-    );
-
-    if (rows.length > 0) {
-      await db.query(
-        'DELETE FROM favoritado WHERE fk_produto_id_produto = ? AND fk_usuario_id_usuario = ?',
-        [produtoId, usuarioId]
-      );
-      return res.json({ sucesso: true, favorito: false });
-    } else {
-      await db.query(
-        'INSERT INTO favoritado (fk_produto_id_produto, fk_usuario_id_usuario) VALUES (?, ?)',
-        [produtoId, usuarioId]
-      );
-      return res.json({ sucesso: true, favorito: true });
-    }
-  } catch (error) {
-    console.error(error);
-    return res.json({ sucesso: false, mensagem: 'Erro no banco de dados' });
+  if (!dados.logado) {
+    alert('Você precisa estar logado para fazer uma reserva!');
+    window.location.href = '/login';
+  } else {
+   
+    window.location.href = '/views/carrinho.html';
   }
 });
 
 
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`);
-});
