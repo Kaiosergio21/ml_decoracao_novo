@@ -198,14 +198,18 @@ const btnFavorito = document.getElementById('btn-favorito');
     }
   });
 
-document.getElementById('btn-reservar').addEventListener('click', () => {
-  const usuarioLogado = false; // Coloque aqui sua lógica de verificação
+document.getElementById('btn-reservar').addEventListener('click', async () => {
+  const resposta = await fetch('/verificar-login');
+  const dados = await resposta.json();
 
-  if (!usuarioLogado) {
-    alert('Você precisa estar logado para alugar um produto!');
-    window.location.href = '/login'; // Redireciona para a página de login
+  if (!dados.logado) {
+    alert('Você precisa estar logado para fazer uma reserva!');
+    window.location.href = '/login';
   } else {
-    // Caso queira, aqui você pode seguir com o processo de reserva
-    alert('Reserva efetuada com sucesso!');
+   
+    window.location.href = '/views/carrinho.html';
   }
 });
+
+
+
