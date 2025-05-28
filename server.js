@@ -173,6 +173,72 @@ app.post('/troca-de-senha', async (req, res) => {
   }
 });
 
+//carrinho
+app.post('/carrinho/adicionar', (req, res) => {
+    const { usuarioId, produtoId, quantidade, precoUnitario } = req.body;
+    const precoTotal = quantidade * precoUnitario;
+
+    const sql = `
+        INSERT INTO carrinho (quantidade_carrinho, preco_total_carrinho, data_e_hora_criacao_carrinho, status_carrinho, fk_usuario_id_usuario, fk_produto_id_produto) 
+        VALUES (?, ?, NOW(), 1, ?, ?)
+    `;
+    conexao.query(sql, [quantidade, precoTotal, usuarioId, produtoId], (erro, resultado) => {
+        if (erro) {
+            res.status(500).send('Erro ao adicionar no carrinho');
+        } else {
+            res.send('Produto adicionado ao carrinho');
+        }
+    });
+});
+
+app.get('/carrinho/:usuarioId', (req, res) => {
+    const { usuarioId } = req.params;
+    const sql = `
+        SELECT c.id_carrinho, p.nome_produto, p.preco_produto, c.quantidade_carrinho, c.preco_total_carrinho
+        FROM carrinho c
+        JOIN produto p ON c.fk_produto_id_produto = p.id_produto
+        WHERE c.fk_usuario_id_usuario = ? AND c.status_carrinho = 1
+    `;
+    conexao.query(sql, [usuarioId], (erro, resultados) => {
+        if (erro) {
+            res.status(500).send('Erro ao buscar carrinho');
+        } else {
+            res.json(resultados);
+        }
+    });
+});
+
+app.put('/carrinho/atualizar/:idCarrinho', (req, res) => {
+    const { idCarrinho } = req.params;
+    const { quantidade, precoUnitario } = req.body;
+    const precoTotal = quantidade * precoUnitario;
+
+    const sql = `
+        UPDATE carrinho 
+        SET quantidade_carrinho = ?, preco_total_carrinho = ? 
+        WHERE id_carrinho = ?
+    `;
+    conexao.query(sql, [quantidade, precoTotal, idCarrinho], (erro, resultado) => {
+        if (erro) {
+            res.status(500).send('Erro ao atualizar item do carrinho');
+        } else {
+            res.send('Item atualizado');
+        }
+    });
+});
+
+app.delete('/carrinho/remover/:idCarrinho', (req, res) => {
+    const { idCarrinho } = req.params;
+    const sql = `DELETE FROM carrinho WHERE id_carrinho = ?`;
+
+    conexao.query(sql, [idCarrinho], (erro, resultado) => {
+        if (erro) {
+            res.status(500).send('Erro ao remover item');
+        } else {
+            res.send('Item removido do carrinho');
+        }
+    });
+});
 
 
 // ============================
