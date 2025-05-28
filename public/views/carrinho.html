@@ -41,57 +41,28 @@
             <button onclick="window.location.href='../views/Home.html'">Continuar Comprando</button>
         </div>
 
-        <section class="cart">
-            <h2>Carrinho</h2>
+  <section class="cart">
+    <h2>Carrinho</h2>
 
-            <div class="category">
-                <p>Item</p>
-                <p>Nome</p>
-                <p>Preço</p>
-                <p>Quantidade</p>
-                <p>Total</p>
-                <p>Remover</p>
-            </div>
+    <div class="category">
+        <p>Item</p>
+        <p>Nome</p>
+        <p>Preço</p>
+        <p>Quantidade</p>
+        <p>Total</p>
+        <p>Remover</p>
+    </div>
 
-            <div class="cart-item">
-                <img src="file/Sem título.jpg" alt="Produto 1">
-                <p>Decoração Aniversário Tubarão</p>
-                <p>R$700</p>
-                <p>1</p>
-                <p>R$2100</p>
-                <img src="file/recycle.png" class="trash-icon" alt="Remover">
-            </div>
-            <div class="cart-item">
-                <img src="file/Sem título.jpg" alt="Produto 2">
-                <p>Decoração Aniversário Intermediário</p>
-                <p>R$700</p>
-                <p>1</p>
-                <p>R$1400</p>
-                <img src="file/recycle.png" class="trash-icon" alt="Remover">
-            </div>
-            <div class="cart-item">
-                <img src="file/Sem título.jpg" alt="Produto 3">
-                <p>Decoração Aniversário Básico</p>
-                <p>R$700</p>
-                <p>1</p>
-                <p>R$1400</p>
-                <img src="file/recycle.png" class="trash-icon" alt="Remover">
-            </div>
-            <div class="cart-item">
-                <img src="file/Sem título.jpg" alt="Produto 4">
-                <p>Decoração Casamento Luxo</p>
-                <p>R$700</p>
-                <p>1</p>
-                <p>R$700</p>
-                <img src="file/recycle.png" class="trash-icon" alt="Remover">
-            </div>
+    <!-- Container para carregar os itens via JS -->
+    <div id="itens-carrinho"></div>
 
-            <div class="reserva">
-                <p>Quantidade (4)</p>
-                <p>Total: R$5600</p>
-                <button>Reservar</button>
-            </div>
-        </section>
+    <div class="reserva">
+        <p id="total-itens">Quantidade (0)</p>
+        <p id="total-preco">Total: R$0,00</p>
+        <button id="btn-finalizar">Reservar</button>
+    </div>
+</section>
+
     </main>
 
     <footer>
